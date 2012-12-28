@@ -1,0 +1,11 @@
+--- block/Kconfig.iosched	2012-09-02 11:57:04.000000000 +0200
++++ block/Kconfig.iosched	2012-09-25 11:56:12.937132217 +0200
+@@ -102,6 +139,8 @@
+ 	string
+ 	default "deadline" if DEFAULT_DEADLINE
+ 	default "cfq" if DEFAULT_CFQ
++	default "sio" if DEFAULT_SIO
++	default "bfq" if DEFAULT_BFQ
+ 	default "noop" if DEFAULT_NOOP
+ 
+ endmenu

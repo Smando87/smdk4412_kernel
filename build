@@ -1,0 +1,12 @@
+#! /bin/sh
+export PATH=$PATH:/home/smando/sdk/platform-tools/
+make ARCH=arm CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi- cyanogenmod_i9300_defconfig
+nice -n 10 make -j4 CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-
+cp arch/arm/boot/zImage ../boottools/
+cd ../boottools/
+./mkbootimg --kernel zImage  --ramdisk ramfs-source-sgs3.cpio.gz --board smdk4x12 --base 0x10000000 --pagesize 2048 --ramdiskaddr 0x11000000 -o boot.img
+zip d CMrepackBoot.img.zip boot.img
+zip CMrepackBoot.img.zip boot.img
+adb push CMrepackBoot.img.zip /sdcard/CMrepackBoot95.img.zip
+adb reboot recovery
+cd ../android_kernel_samsung_smdk4412/

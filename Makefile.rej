@@ -1,0 +1,11 @@
+--- Makefile	2012-09-25 11:56:41.576134865 +0200
++++ Makefile	2012-09-02 11:57:04.000000000 +0200
+@@ -12,8 +12,6 @@
+ obj-$(CONFIG_IOSCHED_NOOP)	+= noop-iosched.o
+ obj-$(CONFIG_IOSCHED_DEADLINE)	+= deadline-iosched.o
+ obj-$(CONFIG_IOSCHED_CFQ)	+= cfq-iosched.o
+-obj-$(CONFIG_IOSCHED_BFQ)	+= bfq-iosched.o
+-obj-$(CONFIG_IOSCHED_SIO)	+= sio-iosched.o
+ 
+ obj-$(CONFIG_BLOCK_COMPAT)	+= compat_ioctl.o
+ obj-$(CONFIG_BLK_DEV_INTEGRITY)	+= blk-integrity.o

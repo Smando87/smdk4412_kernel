@@ -1,0 +1,19 @@
+--- arch/arm/mach-msm/smd.c	2012-09-25 10:36:03.995687534 +0200
++++ arch/arm/mach-msm/smd.c	2012-09-02 11:57:04.000000000 +0200
+@@ -31,7 +31,6 @@
+ #include <linux/ctype.h>
+ #include <linux/remote_spinlock.h>
+ #include <linux/uaccess.h>
+-#include <linux/pm_qos_params.h>
+ #include <mach/msm_smd.h>
+ #include <mach/msm_iomap.h>
+ #include <mach/system.h>
+@@ -50,7 +49,7 @@
+ #include <mach/kevent.h>
+ 
+ #include <linux/wakelock.h>
+-//#include <linux/pm_qos_params.h>
++#include <linux/pm_qos_params.h>
+ 
+ #if defined (DUMPXXX_TO_SDCARD)
+ #include <linux/ashmem.h>

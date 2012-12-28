@@ -1,0 +1,14 @@
+--- include/linux/iocontext.h
++++ include/linux/iocontext.h
+@@ -1,10 +1,10 @@
+ #ifndef IOCONTEXT_H
+ #define IOCONTEXT_H
+ 
+-#include <linux/bitmap.h>
+ #include <linux/radix-tree.h>
+ #include <linux/rcupdate.h>
+ 
++struct cfq_queue;
+ struct cfq_ttime {
+ 	unsigned long last_end_request;
+ 
