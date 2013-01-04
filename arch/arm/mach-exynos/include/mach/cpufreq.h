@@ -14,6 +14,14 @@
  * This should be same with cpufreq_frequency_table
 */
 
+
+#define CPU_UV_MV_MAX 1500000
+#define CPU_UV_MV_MIN 600000
+
+#if defined(CONFIG_CPU_EXYNOS4212) || defined(CONFIG_CPU_EXYNOS4412)
+#define CPUFREQ_LEVEL_END		(L16 + 1)
+#endif
+
 enum cpufreq_level_index {
 	L0, L1, L2, L3, L4,
 	L5, L6, L7, L8, L9,
