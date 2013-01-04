@@ -1,12 +1,75 @@
 #! /bin/sh
+DATE=`date +%Y%m%d-%H%M`
 export PATH=$PATH:/home/smando/sdk/platform-tools/
+RAMFS_TMP=/tmp/ramfs-sgs3
+RAMFS_SOURCE=/home/smando/mot/ramfs-sgs3
+BOOTTOOLS=/home/smando/mot/boottools/
+BOOTIMG=boot.img
+kernel(){
+#make defconfig
 make ARCH=arm CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi- cyanogenmod_i9300_defconfig
+
+#compilo il kernel
 nice -n 10 make -j4 CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-
 cp arch/arm/boot/zImage ../boottools/
-cd ../boottools/
-./mkbootimg --kernel zImage  --ramdisk ramfs-source-sgs3.cpio.gz --board smdk4x12 --base 0x10000000 --pagesize 2048 --ramdiskaddr 0x11000000 -o boot.img
-zip d CMrepackBoot.img.zip boot.img
-zip CMrepackBoot.img.zip boot.img
-adb push CMrepackBoot.img.zip /sdcard/CMrepackBoot95.img.zip
+}
+
+
+ramfs(){
+#aggiungo il ramfs
+
+#remove previous ramfs files
+rm -rf $RAMFS_TMP
+rm -rf $RAMFS_TMP.cpio
+rm -rf $RAMFS_TMP.cpio.gz
+echo "#copy ramfs files to tmp directory"
+cp -ax $RAMFS_SOURCE $RAMFS_TMP
+echo "#clear git repositories in ramfs"
+find $RAMFS_TMP -name .git -exec rm -rf {} \;
+echo "#remove empty directory placeholders"
+find $RAMFS_TMP -name EMPTY_DIRECTORY -exec rm -rf {} \;
+rm -rf $RAMFS_TMP/tmp/*
+echo "#remove mercurial repository"
+rm -rf $RAMFS_TMP/.hg
+echo "#copy modules into ramfs"
+mkdir -p $RAMFS_TMP/lib/modules
+#mv -f drivers/media/video/samsung/mali_r3p0_lsi/mali.ko drivers/media/video/samsung/mali_r3p0_lsi/mali_r3p0_lsi.ko
+find -name '*.ko' -exec cp -av {} $RAMFS_TMP/lib/modules/ \;
+/home/smando/android/system/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi-strip --strip-unneeded $RAMFS_TMP/lib/modules/*
+
+cd $RAMFS_TMP
+find | fakeroot cpio -H newc -o > $RAMFS_TMP.cpio 2>/dev/null
+ls -lh $RAMFS_TMP.cpio
+gzip -9 $RAMFS_TMP.cpio
+
+
+cd $BOOTTOOLS
+./mkbootimg --kernel zImage  --ramdisk $RAMFS_TMP.cpio.gz --board smdk4x12 --base 0x10000000 --pagesize 2048 --ramdiskaddr 0x11000000 -o $BOOTIMG
+
+echo "La boot.img e' pronta: $BOOTTOOLS/boot.img"
+
+cd ../android_kernel_samsung_smdk4412/
+}
+
+push(){
+cd $BOOTTOOLS
+#creo l'update.zip
+zip d CMrepackBoot.img.zip $BOOTIMG
+zip CMrepackBoot.img.zip $BOOTIMG
+
+#copio sul device e riavvio
+adb push CMrepackBoot.img.zip /sdcard/$BOOTIMG-$DATE.zip
 adb reboot recovery
 cd ../android_kernel_samsung_smdk4412/
+}
+
+case $1 in
+	-ramfs)ramfs
+		;;
+	-all)kernel
+	    ramfs
+	    push;;
+	-kernel)kernel;;
+	-push)push;;
+	*)echo "Errore";;
+esac
