@@ -7,7 +7,7 @@ BOOTTOOLS=/home/smando/mot/boottools/
 BOOTIMG=boot.img
 kernel(){
 #make defconfig
-make ARCH=arm CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi- cyanogenmod_i9300_defconfig
+make ARCH=arm CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi- smando_defconfig
 
 #compilo il kernel
 nice -n 10 make -j4 CROSS_COMPILE=/home/smando/mot/Android_Toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-
